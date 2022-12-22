@@ -1,5 +1,3 @@
-import json
-
 from rest_framework import status
 from rest_framework.test import APITestCase
 
@@ -22,3 +20,11 @@ class UserRegisterTest(APITestCase):
         response = self.client.post('/accounts/registration', data)
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
+    def test_registration_should_fail_with_already_exists_email(self):
+        data = {
+            "email": "test@test.com",
+            "password": "test1234",
+        }
+        self.client.post('/accounts/registration', data)
+        response = self.client.post('/accounts/registration', data)
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
