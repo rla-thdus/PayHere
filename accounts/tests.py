@@ -1,3 +1,15 @@
-from django.test import TestCase
+import json
 
-# Create your tests here.
+from rest_framework import status
+from rest_framework.test import APITestCase
+
+
+class UserRegisterTest(APITestCase):
+
+    def test_registration_should_success_with_valid_data(self):
+        data = {
+            "email": "test@test.com",
+            "password": "test1234",
+        }
+        response = self.client.post('/accounts/registration', data)
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
