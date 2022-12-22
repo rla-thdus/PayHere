@@ -13,3 +13,12 @@ class UserRegisterTest(APITestCase):
         }
         response = self.client.post('/accounts/registration', data)
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+
+    def test_registration_should_fail_when_data_not_enough(self):
+        data = {
+            "email": "",
+            "password": "test1234"
+        }
+        response = self.client.post('/accounts/registration', data)
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+
