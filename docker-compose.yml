@@ -1,0 +1,33 @@
+version : '3'
+
+services:
+  db:
+    container_name: 'mysql'
+    image: mysql:5.7
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_ROOT_HOST: localhost
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_USER: sy
+      MYSQL_PASSWORD: sy1234
+
+  web:
+    container_name: 'service'
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+    volumes:
+      - ./:/var/www/html
+    working_dir: /var/www/html/
+    command: python manage.py runserver 0.0.0.0:3000
+    environment:
+      MYSQL_NAME: mysql
+      MYSQL_USER: sy
+      MYSQL_PASSWORD: sy1234
+      MYSQL_HOST: db
+      MYSQL_PORT: 3306
+    ports:
+      - "3000:3000"
+    depends_on:
+      - db
