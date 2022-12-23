@@ -19,3 +19,9 @@ class LoginTest(APITestCase):
         self.data['password'] = '1234'
         response = self.client.post('/accounts/login', self.data)
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+
+    def test_login_should_fail_with_not_registration_user(self):
+        self.data['email'] = 'test1@test.com'
+        response = self.client.post('/accounts/login', self.data)
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+
