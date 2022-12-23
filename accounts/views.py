@@ -1,4 +1,5 @@
 from rest_framework import status
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
@@ -22,3 +23,12 @@ class LoginAPI(APIView):
             response.set_cookie("refresh_token", serializer.validated_data['refresh_token'], httponly=True)
             return response
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+class LogoutAPI(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def delete(self, request):
+        response = Response({"message": "Logout success"}, status=status.HTTP_202_ACCEPTED)
+        response.delete_cookie("refresh_token")
+        return response
