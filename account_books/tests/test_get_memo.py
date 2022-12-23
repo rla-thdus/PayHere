@@ -4,7 +4,7 @@ from rest_framework import status
 from rest_framework.test import APITestCase
 
 
-class MemoAddAPITest(APITestCase):
+class MemoGetAPITest(APITestCase):
     def setUp(self):
         user_data = {
             "email": "test@test.com",
