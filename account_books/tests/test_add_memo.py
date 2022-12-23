@@ -21,3 +21,7 @@ class MemoAddAPITest(APITestCase):
         headers = {'HTTP_AUTHORIZATION': "Bearer " + json.loads(self.login.content)['access_token']}
         response = self.client.post('/account_books/memos', self.data, **headers)
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+
+    def test_add_memo_should_fail_with_not_authenticated_user(self):
+        response = self.client.post('/account_books/memos', self.data)
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
