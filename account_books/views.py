@@ -1,3 +1,5 @@
+from datetime import datetime
+
 from rest_framework import status
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
@@ -23,7 +25,7 @@ class MemoDetailAPI(APIView):
     permission_classes = [IsAuthenticated, IsMine]
 
     def get_object(self, memo_id):
-        if Memo.objects.filter(id=memo_id).exists():
+        if Memo.objects.filter(id=memo_id, deleted_at=None).exists():
             memo = Memo.objects.get(id=memo_id)
             self.check_object_permissions(self.request, memo)
             return memo
@@ -35,3 +37,11 @@ class MemoDetailAPI(APIView):
             return Response({'message': 'Invalid memo id'}, status=status.HTTP_400_BAD_REQUEST)
         serializer = MemoSerializer(memo)
         return Response(serializer.data, status=status.HTTP_200_OK)
+
+    def delete(self, request, memo_id):
+        memo = self.get_object(memo_id)
+        if memo is None:
+            return Response({'message': 'Invalid memo id'}, status=status.HTTP_400_BAD_REQUEST)
+        memo.deleted_at = datetime.today()
+        memo.save()
+        return Response({'message': f'Deleted memo id is {memo_id}'}, status=status.HTTP_202_ACCEPTED)
