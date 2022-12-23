@@ -32,7 +32,6 @@ class MemoDetailAPI(APIView):
     def get(self, request, memo_id):
         memo = self.get_object(memo_id)
         if memo is None:
-            return Response({'message': 'invalid memo id'}, status=status.HTTP_400_BAD_REQUEST)
+            return Response({'message': 'Invalid memo id'}, status=status.HTTP_400_BAD_REQUEST)
         serializer = MemoSerializer(memo)
         return Response(serializer.data, status=status.HTTP_200_OK)
-
