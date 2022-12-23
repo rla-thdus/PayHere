@@ -26,3 +26,7 @@ class MemoAddAPITest(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data['spend_price'], self.data['spend_price'])
         self.assertEqual(response.data['content'], self.data['content'])
+
+    def test_get_memo_should_fail_with_not_authenticated_user(self):
+        response = self.client.get(f'/account_books/memos/{self.memo_id}')
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
