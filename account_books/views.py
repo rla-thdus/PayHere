@@ -38,6 +38,16 @@ class MemoDetailAPI(APIView):
         serializer = MemoSerializer(memo)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
+    def patch(self, request, memo_id):
+        memo = self.get_object(memo_id)
+        if memo is None:
+            return Response({'message': 'Invalid memo id'}, status=status.HTTP_400_BAD_REQUEST)
+        serializer = MemoSerializer(memo, data=request.data, partial=True)
+        if serializer.is_valid():
+            serializer.save(user=request.user)
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
     def delete(self, request, memo_id):
         memo = self.get_object(memo_id)
         if memo is None:
