@@ -18,3 +18,7 @@ class LogoutTest(APITestCase):
         response = self.client.delete('/accounts/logout', None, **headers)
         self.assertEqual(response.status_code, status.HTTP_202_ACCEPTED)
         self.assertEqual(response.data['message'], 'Logout success')
+
+    def test_logout_should_fail_with_not_authenticated_user(self):
+        response = self.client.delete('/accounts/logout')
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
