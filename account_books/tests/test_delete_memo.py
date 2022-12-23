@@ -34,3 +34,14 @@ class MemoDeleteAPITest(APITestCase):
     def test_delete_memo_should_fail_with_not_authenticated_user(self):
         response = self.client.delete(f'/account_books/memos/{self.memo_id}', self.data)
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+
+    def test_delete_memo_should_fail_with_not_exists_memo(self):
+        headers = {'HTTP_AUTHORIZATION': "Bearer " + json.loads(self.login.content)['access_token']}
+        response = self.client.delete(f'/account_books/memos/{self.memo_id + 1}', None, **headers)
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertEqual(response.data['message'], 'Invalid memo id')
+
+    def test_delete_memo_should_fail_not_own_memo(self):
+        headers = {'HTTP_AUTHORIZATION': "Bearer " + json.loads(self.new_login.content)['access_token']}
+        response = self.client.delete(f'/account_books/memos/{self.memo_id}', None, **headers)
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
