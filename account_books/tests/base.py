@@ -1,33 +1,36 @@
 import json
 
-from rest_framework.test import APITestCase
+from rest_framework.test import APITestCase, APIClient
 
 
 class BaseAPITest(APITestCase):
-    def setUp(self):
-        user_data = {
+    @classmethod
+    def setUpTestData(cls):
+        cls.user_data = {
             "email": "test@test.com",
             "password": "test1234",
         }
-        new_user_data = {
+        cls.new_user_data = {
             "email": "test1@test.com",
             "password": "test1234",
         }
-        self.client.post('/accounts/registration', user_data)
-        self.client.post('/accounts/registration', new_user_data)
-        self.login = self.client.post('/accounts/login', user_data)
-        self.new_login = self.client.post('/accounts/login', new_user_data)
-        self.data = {
+        cls.data = {
             "spend_price": 10000,
             "content": 'buy snacks'
         }
-        self.update_data = {
+        cls.update_data = {
             "spend_price": 18000,
         }
-        self.data2 = {
+        cls.data2 = {
             "spend_price": 1000,
             "content": 'buy snacks'
         }
+
+    def setUp(self):
+        self.client.post('/accounts/registration', self.user_data)
+        self.client.post('/accounts/registration', self.new_user_data)
+        self.login = self.client.post('/accounts/login', self.user_data)
+        self.new_login = self.client.post('/accounts/login', self.new_user_data)
         self.headers = {'HTTP_AUTHORIZATION': f"Bearer {json.loads(self.login.content)['access']}"}
         memo = self.client.post('/account_books/memos', self.data, **self.headers)
         self.client.post('/account_books/memos', self.data2, **self.headers)
