@@ -106,3 +106,20 @@ class MemoShareAPI(APIView):
         if serializer.is_valid():
             serializer.save(memo=memo)
         return Response(serializer.data, status=status.HTTP_201_CREATED)
+
+
+class TemporaryMemoAPI(APIView):
+    serializer_class = MemoSerializer
+
+    def get_object(self, link):
+        now = datetime.datetime.now()
+        if Url.objects.filter(link=link, expired_at__gt=now).exists():
+            url = Url.objects.get(link=link, expired_at__gt=now)
+            return url.memo
+        raise NotFound(detail='Expired link or Invalid link')
+
+    def get(self, request, link):
+        memo = self.get_object(link)
+        serializer = self.serializer_class(memo)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+

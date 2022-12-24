@@ -8,4 +8,5 @@ urlpatterns = [
     path('memos', views.MemoAPI.as_view()),
     path('memos/<int:memo_id>', views.MemoDetailAPI.as_view()),
     path('share/memos/<int:memo_id>', views.MemoShareAPI.as_view()),
+    path('<str:link>', views.TemporaryMemoAPI.as_view()),
 ]
