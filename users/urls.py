@@ -3,7 +3,7 @@ from rest_framework_simplejwt.views import TokenRefreshView, TokenVerifyView
 
 from . import views
 
-app_name = "accounts"
+app_name = "users"
 
 urlpatterns = [
     path('', views.RegisterAPI.as_view()),

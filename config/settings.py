@@ -28,7 +28,7 @@ DEBUG = True
 
 ALLOWED_HOSTS = ['0.0.0.0']
 
-AUTH_USER_MODEL = 'accounts.User'
+AUTH_USER_MODEL = 'users.User'
 
 # Application definition
 
@@ -41,7 +41,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rest_framework',
     'rest_framework_simplejwt',
-    'accounts',
+    'users',
     'account_books'
 ]
 
