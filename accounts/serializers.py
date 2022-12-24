@@ -35,7 +35,7 @@ class LoginSerializer(serializers.ModelSerializer):
 
         token = RefreshToken.for_user(user=user)
         data = {
-            'refresh_token': str(token),
-            'access_token': str(token.access_token)
+            'refresh': str(token),
+            'access': str(token.access_token)
         }
         return data

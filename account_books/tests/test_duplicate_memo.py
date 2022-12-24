@@ -22,12 +22,12 @@ class MemoDuplicateAPITest(APITestCase):
             "spend_price": 10000,
             "content": 'buy snacks'
         }
-        self.headers = {'HTTP_AUTHORIZATION': f"Bearer {json.loads(self.login.content)['access_token']}"}
+        self.headers = {'HTTP_AUTHORIZATION': f"Bearer {json.loads(self.login.content)['access']}"}
         memo = self.client.post('/account_books/memos', self.data, **self.headers)
         self.memo_id = memo.data['id']
 
     def test_duplicate_memo_should_success_with_valid_data_and_user(self):
-        headers = {'HTTP_AUTHORIZATION': f"Bearer {json.loads(self.login.content)['access_token']}"}
+        headers = {'HTTP_AUTHORIZATION': f"Bearer {json.loads(self.login.content)['access']}"}
         response = self.client.post(f'/account_books/memos/{self.memo_id}', **headers)
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
 
@@ -36,12 +36,12 @@ class MemoDuplicateAPITest(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
 
     def test_duplicate_memo_should_fail_with_not_exists_memo(self):
-        headers = {'HTTP_AUTHORIZATION': f"Bearer {json.loads(self.login.content)['access_token']}"}
+        headers = {'HTTP_AUTHORIZATION': f"Bearer {json.loads(self.login.content)['access']}"}
         response = self.client.post(f'/account_books/memos/{self.memo_id + 1}', **headers)
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
         self.assertEqual(response.data['detail'], 'Invalid memo id')
 
     def test_duplicate_memo_should_fail_not_own_memo(self):
-        headers = {'HTTP_AUTHORIZATION': f"Bearer {json.loads(self.new_login.content)['access_token']}"}
+        headers = {'HTTP_AUTHORIZATION': f"Bearer {json.loads(self.new_login.content)['access']}"}
         response = self.client.post(f'/account_books/memos/{self.memo_id}', **headers)
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)

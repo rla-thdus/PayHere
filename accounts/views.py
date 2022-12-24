@@ -19,9 +19,7 @@ class LoginAPI(APIView):
     def post(self, request):
         serializer = LoginSerializer(data=request.data)
         if serializer.is_valid():
-            response = Response({"access_token": serializer.validated_data['access_token']}, status=status.HTTP_200_OK)
-            response.set_cookie("refresh_token", serializer.validated_data['refresh_token'], httponly=True)
-            return response
+            return Response(serializer.validated_data, status=status.HTTP_200_OK)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 

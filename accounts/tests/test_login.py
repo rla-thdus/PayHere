@@ -13,7 +13,7 @@ class LoginTest(APITestCase):
     def test_login_should_success_with_registration_user(self):
         response = self.client.post('/accounts/login', self.data)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertTrue('access_token' in response.data)
+        self.assertTrue('access' in response.data)
 
     def test_login_should_fail_with_wrong_account_info(self):
         self.data['password'] = '1234'
