@@ -32,7 +32,7 @@ class MemoAPI(APIView, PaginationHandlerMixin):
         return Response(serializer.data, status=status.HTTP_200_OK)
 
     def post(self, request):
-        serializer = MemoSerializer(data=request.data)
+        serializer = self.serializer_class(data=request.data)
         if serializer.is_valid():
             serializer.save(user=request.user)
             return Response(serializer.data, status=status.HTTP_201_CREATED)
@@ -41,6 +41,7 @@ class MemoAPI(APIView, PaginationHandlerMixin):
 
 class MemoDetailAPI(APIView):
     permission_classes = [IsAuthenticated, IsMine]
+    serializer_class = MemoSerializer
 
     def get_object(self, memo_id):
         if Memo.objects.filter(id=memo_id, deleted_at=None).exists():
@@ -51,7 +52,7 @@ class MemoDetailAPI(APIView):
 
     def get(self, request, memo_id):
         memo = self.get_object(memo_id)
-        serializer = MemoSerializer(memo)
+        serializer = self.serializer_class(memo)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
     def post(self, request, memo_id):
@@ -62,7 +63,7 @@ class MemoDetailAPI(APIView):
 
     def patch(self, request, memo_id):
         memo = self.get_object(memo_id)
-        serializer = MemoSerializer(memo, data=request.data, partial=True)
+        serializer = self.serializer_class(memo, data=request.data, partial=True)
         if serializer.is_valid():
             serializer.save(user=request.user)
             return Response(serializer.data, status=status.HTTP_200_OK)
