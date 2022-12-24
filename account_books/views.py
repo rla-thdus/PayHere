@@ -2,21 +2,29 @@ from datetime import datetime
 
 from rest_framework import status
 from rest_framework.exceptions import NotFound
+from rest_framework.pagination import PageNumberPagination
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from account_books.models import Memo
+from account_books.pagination import PaginationHandlerMixin
 from account_books.serializers import MemoSerializer
 from config.permissions import IsMine
 
 
-class MemoAPI(APIView):
+class MemoAPI(APIView, PaginationHandlerMixin):
     permission_classes = [IsAuthenticated]
+    pagination_class = PageNumberPagination
+    serializer_class = MemoSerializer
 
     def get(self, request):
         memos = Memo.objects.filter(user=request.user, deleted_at=None)
-        serializer = MemoSerializer(memos, many=True)
+        page = self.paginate_queryset(memos)
+        if page is not None:
+            serializer = self.get_paginated_response(self.serializer_class(page, many=True).data)
+        else:
+            serializer = self.serializer_class(memos, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
     def post(self, request):
