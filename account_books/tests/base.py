@@ -1,6 +1,6 @@
 import json
 
-from rest_framework.test import APITestCase, APIClient
+from rest_framework.test import APITestCase
 
 
 class BaseAPITest(APITestCase):
