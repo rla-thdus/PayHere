@@ -32,8 +32,8 @@ class BaseAPITest(APITestCase):
         self.login = self.client.post('/accounts/login', self.user_data)
         self.new_login = self.client.post('/accounts/login', self.new_user_data)
         self.headers = {'HTTP_AUTHORIZATION': f"Bearer {json.loads(self.login.content)['access']}"}
-        memo = self.client.post('/account_books/memos', self.data, **self.headers)
-        self.client.post('/account_books/memos', self.data2, **self.headers)
+        memo = self.client.post('/account-books/memos', self.data, **self.headers)
+        self.client.post('/account-books/memos', self.data2, **self.headers)
         self.memo_id = memo.data['id']
-        share = self.client.post(f'/account_books/share/memos/{self.memo_id}', **self.headers)
+        share = self.client.post(f'/account-books/share/memos/{self.memo_id}', **self.headers)
         self.share_link = share.data['link']
