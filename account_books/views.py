@@ -13,6 +13,11 @@ from config.permissions import IsMine
 class MemoAPI(APIView):
     permission_classes = [IsAuthenticated]
 
+    def get(self, request):
+        memos = Memo.objects.filter(user=request.user, deleted_at=None)
+        serializer = MemoSerializer(memos, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
     def post(self, request):
         serializer = MemoSerializer(data=request.data)
         if serializer.is_valid():
