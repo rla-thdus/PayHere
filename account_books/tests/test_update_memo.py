@@ -25,12 +25,12 @@ class MemoUpdateAPITest(APITestCase):
         self.update_data = {
             "spend_price": 18000,
         }
-        self.headers = {'HTTP_AUTHORIZATION': "Bearer " + json.loads(self.login.content)['access_token']}
+        self.headers = {'HTTP_AUTHORIZATION': f"Bearer {json.loads(self.login.content)['access_token']}"}
         memo = self.client.post('/account_books/memos', self.data, **self.headers)
         self.memo_id = memo.data['id']
 
     def test_update_memo_should_success_with_valid_data_and_user(self):
-        headers = {'HTTP_AUTHORIZATION': "Bearer " + json.loads(self.login.content)['access_token']}
+        headers = {'HTTP_AUTHORIZATION': f"Bearer {json.loads(self.login.content)['access_token']}"}
         response = self.client.patch(f'/account_books/memos/{self.memo_id}', self.update_data, **headers)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data['spend_price'], self.update_data['spend_price'])
@@ -40,12 +40,12 @@ class MemoUpdateAPITest(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
 
     def test_update_memo_should_fail_with_not_exists_memo(self):
-        headers = {'HTTP_AUTHORIZATION': "Bearer " + json.loads(self.login.content)['access_token']}
+        headers = {'HTTP_AUTHORIZATION': f"Bearer {json.loads(self.login.content)['access_token']}"}
         response = self.client.patch(f'/account_books/memos/{self.memo_id + 1}', self.update_data, **headers)
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
         self.assertEqual(response.data['message'], 'Invalid memo id')
 
     def test_update_memo_should_fail_not_own_memo(self):
-        headers = {'HTTP_AUTHORIZATION': "Bearer " + json.loads(self.new_login.content)['access_token']}
+        headers = {'HTTP_AUTHORIZATION': f"Bearer {json.loads(self.new_login.content)['access_token']}"}
         response = self.client.patch(f'/account_books/memos/{self.memo_id}', self.update_data, **headers)
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)

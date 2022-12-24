@@ -14,7 +14,7 @@ class LogoutTest(APITestCase):
         self.login = self.client.post('/accounts/login', data)
 
     def test_logout_should_success_with_authenticated_user(self):
-        headers = {'HTTP_AUTHORIZATION': "Bearer " + json.loads(self.login.content)['access_token']}
+        headers = {'HTTP_AUTHORIZATION': f"Bearer {json.loads(self.login.content)['access_token']}"}
         response = self.client.delete('/accounts/logout', None, **headers)
         self.assertEqual(response.status_code, status.HTTP_202_ACCEPTED)
         self.assertEqual(response.data['message'], 'Logout success')

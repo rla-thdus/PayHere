@@ -18,7 +18,7 @@ class MemoAddAPITest(APITestCase):
         }
 
     def test_add_memo_should_success_with_valid_data_and_user(self):
-        headers = {'HTTP_AUTHORIZATION': "Bearer " + json.loads(self.login.content)['access_token']}
+        headers = {'HTTP_AUTHORIZATION': f"Bearer {json.loads(self.login.content)['access_token']}"}
         response = self.client.post('/account_books/memos', self.data, **headers)
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
 
@@ -28,6 +28,6 @@ class MemoAddAPITest(APITestCase):
 
     def test_add_memo_should_fail_with_invalid_data(self):
         self.data['spend_price'] = ''
-        headers = {'HTTP_AUTHORIZATION': "Bearer " + json.loads(self.login.content)['access_token']}
+        headers = {'HTTP_AUTHORIZATION': f"Bearer {json.loads(self.login.content)['access_token']}"}
         response = self.client.post('/account_books/memos', self.data, **headers)
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
