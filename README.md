@@ -56,6 +56,17 @@ python manage.py test
   - 인증된 유저에 한해 로그아웃을 할 수 있습니다.
   - 인증 안된 유저의 요청에는 `Unauthorized`를 반환합니다.
   - 로그아웃에 성공하면 `Accepted`를 반환합니다.
+- **[토큰 재발급]**
+  - [POST] `/accounts/token/refresh`
+  - 다음과 같은 값은 `Request Body`에 반드시 필요합니다.
+    - `refresh`: 유효한 `refresh` 토큰 값을 넣어줘야 합니다.
+  - 재발급에 성공시 `access` 토큰을 반환합니다.
+- **[토큰 검증]**
+  - [POST] `/accounts/token/verify`
+  - 다음과 같은 값은 `Request Body`에 반드시 필요합니다.
+    - `token`: `access` 토큰 값을 넣어줘야 합니다.
+  - 아직 만료되지 않은 토큰이라면 `OK`를 반환합니다.
+  - 유효하지 않은 토큰이라면 `UNAUTHROIZED`를 반환합니다.
 - **[메모 작성]**
   - [POST] `/account_books/memos`
   - 인증된 유저에 한해 메모를 작성할 수 있습니다.
