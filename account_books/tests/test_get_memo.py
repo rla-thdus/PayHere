@@ -74,3 +74,9 @@ class MemoGetAPITest(APITestCase):
         response = self.client.get(f'/account_books/memos', **headers)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data['results'], [])
+
+    def test_get_all_memos_should_fail_with_invalid_order_option(self):
+        headers = {'HTTP_AUTHORIZATION': f"Bearer {json.loads(self.login.content)['access_token']}"}
+        response = self.client.get(f'/account_books/memos?order_by=wrong_option', **headers)
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertEqual(response.data['message'], 'Invalid ordering option')
