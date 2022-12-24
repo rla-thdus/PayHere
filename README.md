@@ -119,7 +119,7 @@ python manage.py test
   - 해당 메모가 자신의 것이 아닌 경우 `FORBIDDEN`을 반환합니다.
   - 공유 링크 생성 시간을 기준으로 15분뒤 만료됩니다.
 - **[메모 공유 링크 접속]**
-  - [GET] `/{shared_link}`
+  - [GET] `/account-books/{shared_link}`
   - 유효한 공유된 링크를 가지고 있는 누구나 해당 메모의 내용을 볼 수 있습니다.
   - 공유된 링크가 만료됐을 때 `NOT FOUND`를 반환합니다.
 
