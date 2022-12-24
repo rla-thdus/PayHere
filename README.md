@@ -36,6 +36,7 @@ python manage.py test
 ![](./erd.png)
 
 # 기능 설명
+- https://documenter.getpostman.com/view/22668733/2s8Z6vYtrf
 - **[회원 가입]**
   - [POST] `/accounts/registration`
   - 회원 가입을 할 수 있습니다.
