@@ -27,10 +27,10 @@ class BaseAPITest(APITestCase):
         }
 
     def setUp(self):
-        self.client.post('/accounts/registration', self.user_data)
-        self.client.post('/accounts/registration', self.new_user_data)
-        self.login = self.client.post('/accounts/login', self.user_data)
-        self.new_login = self.client.post('/accounts/login', self.new_user_data)
+        self.client.post('/users/', self.user_data)
+        self.client.post('/users/', self.new_user_data)
+        self.login = self.client.post('/users/login', self.user_data)
+        self.new_login = self.client.post('/users/login', self.new_user_data)
         self.headers = {'HTTP_AUTHORIZATION': f"Bearer {json.loads(self.login.content)['access']}"}
         memo = self.client.post('/account-books/memos', self.data, **self.headers)
         self.client.post('/account-books/memos', self.data2, **self.headers)
