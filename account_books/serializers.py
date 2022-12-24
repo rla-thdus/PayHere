@@ -1,5 +1,3 @@
-import datetime
-
 from .models import Memo, Url
 from rest_framework import serializers
 
