@@ -24,6 +24,7 @@ class MemoGetAPITest(APITestCase):
         }
         self.headers = {'HTTP_AUTHORIZATION': "Bearer " + json.loads(self.login.content)['access_token']}
         memo = self.client.post('/account_books/memos', self.data, **self.headers)
+        self.client.post('/account_books/memos', self.data, **self.headers)
         self.memo_id = memo.data['id']
 
     def test_get_memo_should_success_with_authenticated_user_and_exists_memo(self):
@@ -39,7 +40,7 @@ class MemoGetAPITest(APITestCase):
 
     def test_get_memo_should_fail_with_not_exists_memo(self):
         headers = {'HTTP_AUTHORIZATION': "Bearer " + json.loads(self.login.content)['access_token']}
-        response = self.client.get(f'/account_books/memos/{self.memo_id + 1}', **headers)
+        response = self.client.get(f'/account_books/memos/{self.memo_id + 10}', **headers)
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
         self.assertEqual(response.data['message'], 'Invalid memo id')
 
@@ -48,3 +49,8 @@ class MemoGetAPITest(APITestCase):
         response = self.client.get(f'/account_books/memos/{self.memo_id}', **headers)
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
+    def test_get_all_memos_should_success_with_authenticated_user(self):
+        headers = {'HTTP_AUTHORIZATION': "Bearer " + json.loads(self.login.content)['access_token']}
+        response = self.client.get(f'/account_books/memos', **headers)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(len(response.data), 2)
