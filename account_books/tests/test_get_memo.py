@@ -41,8 +41,8 @@ class MemoGetAPITest(APITestCase):
     def test_get_memo_should_fail_with_not_exists_memo(self):
         headers = {'HTTP_AUTHORIZATION': f"Bearer {json.loads(self.login.content)['access_token']}"}
         response = self.client.get(f'/account_books/memos/{self.memo_id + 10}', **headers)
-        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
-        self.assertEqual(response.data['message'], 'Invalid memo id')
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
+        self.assertEqual(response.data['detail'], 'Invalid memo id')
 
     def test_get_memo_should_fail_not_own_memo(self):
         headers = {'HTTP_AUTHORIZATION': f"Bearer {json.loads(self.new_login.content)['access_token']}"}
