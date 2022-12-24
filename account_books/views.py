@@ -1,4 +1,4 @@
-from datetime import datetime
+import datetime
 
 from rest_framework import status
 from rest_framework.exceptions import NotFound
@@ -7,9 +7,9 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from account_books.models import Memo
+from account_books.models import Memo, Url
 from account_books.pagination import PaginationHandlerMixin
-from account_books.serializers import MemoSerializer
+from account_books.serializers import MemoSerializer, UrlSerializer
 from config.permissions import IsMine
 
 
@@ -71,6 +71,38 @@ class MemoDetailAPI(APIView):
 
     def delete(self, request, memo_id):
         memo = self.get_object(memo_id)
-        memo.deleted_at = datetime.today()
+        memo.deleted_at = datetime.datetime.today()
         memo.save()
         return Response({'message': f'Deleted memo id is {memo_id}'}, status=status.HTTP_202_ACCEPTED)
+
+
+class MemoShareAPI(APIView):
+    permission_classes = [IsAuthenticated, IsMine]
+    serializer_class = UrlSerializer
+
+    def get_object(self, memo_id):
+        if Memo.objects.filter(id=memo_id, deleted_at=None).exists():
+            memo = Memo.objects.get(id=memo_id)
+            self.check_object_permissions(self.request, memo)
+            return memo
+        raise NotFound(detail='Invalid memo id')
+
+    def generate_data(self, memo):
+        if Url.objects.filter(memo=memo).exists():
+            url = Url.objects.get(memo=memo)
+        else:
+            url = None
+        now = datetime.datetime.now()
+        data = {
+            "expired_at": now + datetime.timedelta(minutes=15),
+            "link": f"{memo.id}{now.timestamp()}".replace('.', '')
+        }
+        return url, data
+
+    def post(self, request, memo_id):
+        memo = self.get_object(memo_id)
+        url, data = self.generate_data(memo)
+        serializer = self.serializer_class(url, data=data)
+        if serializer.is_valid():
+            serializer.save(memo=memo)
+        return Response(serializer.data, status=status.HTTP_201_CREATED)

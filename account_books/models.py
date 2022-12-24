@@ -10,3 +10,11 @@ class Memo(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     deleted_at = models.DateTimeField(default=None, null=True)
+
+
+class Url(models.Model):
+    memo = models.OneToOneField(Memo, on_delete=models.CASCADE)
+    link = models.CharField(max_length=32, unique=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    expired_at = models.DateTimeField()
