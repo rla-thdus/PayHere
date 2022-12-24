@@ -38,6 +38,14 @@ class MemoDetailAPI(APIView):
         serializer = MemoSerializer(memo)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
+    def post(self, request, memo_id):
+        memo = self.get_object(memo_id)
+        if memo is None:
+            return Response({'message': 'Invalid memo id'}, status=status.HTTP_400_BAD_REQUEST)
+        memo.id = None
+        memo.save()
+        return Response({'message': f'memo({memo_id}) copied to memo({memo.id})'}, status=status.HTTP_201_CREATED)
+
     def patch(self, request, memo_id):
         memo = self.get_object(memo_id)
         if memo is None:
