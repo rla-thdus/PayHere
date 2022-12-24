@@ -17,9 +17,13 @@ class MemoAPI(APIView, PaginationHandlerMixin):
     permission_classes = [IsAuthenticated]
     pagination_class = PageNumberPagination
     serializer_class = MemoSerializer
+    order_fields = ['created_at', '-created_at', 'spend_price', '-spend_price']
 
     def get(self, request):
-        memos = Memo.objects.filter(user=request.user, deleted_at=None)
+        order_by = request.query_params.get('order_by', '-created_at')
+        if order_by not in self.order_fields:
+            return Response({'message': 'Invalid ordering option'}, status=status.HTTP_400_BAD_REQUEST)
+        memos = Memo.objects.filter(user=request.user, deleted_at=None).order_by(order_by)
         page = self.paginate_queryset(memos)
         if page is not None:
             serializer = self.get_paginated_response(self.serializer_class(page, many=True).data)
