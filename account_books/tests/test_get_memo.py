@@ -54,3 +54,13 @@ class MemoGetAPITest(APITestCase):
         response = self.client.get(f'/account_books/memos', **headers)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(len(response.data), 2)
+
+    def test_get_all_memos_should_fail_with_not_authenticated_user(self):
+        response = self.client.get(f'/account_books/memos')
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+
+    def test_get_all_memos_should_return_empty_array_when_does_not_have_memo(self):
+        headers = {'HTTP_AUTHORIZATION': f"Bearer {json.loads(self.new_login.content)['access_token']}"}
+        response = self.client.get(f'/account_books/memos', **headers)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data, [])
