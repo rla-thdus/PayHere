@@ -50,7 +50,7 @@ python manage.py test
     - `email`
     - `password`
   - 이메일이 존재하지 않거나 패스워드가 일치하지 않을 경우 `BAD REQUEST`를 반환합니다.
-  - 로그인에 성공하면 `access_token`을 반환합니다.
+  - 로그인에 성공하면 `access`, `refresh` 토큰을 반환합니다.
 - **[로그아웃]**
   - [DELETE] `/accounts/logout`
   - 인증된 유저에 한해 로그아웃을 할 수 있습니다.
