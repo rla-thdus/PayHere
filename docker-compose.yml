@@ -20,7 +20,8 @@ services:
     volumes:
       - ./:/var/www/html
     working_dir: /var/www/html/
-    command: python manage.py runserver 0.0.0.0:3000
+    command: >
+      bash -c "python manage.py migrate && python manage.py runserver 0.0.0.0:3000"
     environment:
       MYSQL_NAME: mysql
       MYSQL_USER: root
