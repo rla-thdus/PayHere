@@ -23,7 +23,7 @@ PayHere
 # 코드 받아서 띄우기
 git clone https://github.com/rla-thdus/PayHere.git
 cd PayHere
-docker-comopse up -d
+docker-compose up -d
 ```
 
 ### 테스트 코드 동작 시키기
@@ -122,5 +122,3 @@ python manage.py test
   - [GET] `/account-books/{shared_link}`
   - 유효한 공유된 링크를 가지고 있는 누구나 해당 메모의 내용을 볼 수 있습니다.
   - 공유된 링크가 만료됐을 때 `NOT FOUND`를 반환합니다.
-
-
